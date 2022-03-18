@@ -38,6 +38,14 @@ public class ContactsPlugin: CAPPlugin {
         }
     }
 
+    @objc func hasPermission(_ call: CAPPluginCall) {
+        print("checkPermission was triggered in Swift")
+        let status = Permissions.hasPermission().rawValue
+        call.resolve([
+            "status": status
+        ])
+    }
+
     @objc func getContacts(_ call: CAPPluginCall) {
         var contactsArray: [PluginCallResultData] = []
         Permissions.contactPermission { granted in
