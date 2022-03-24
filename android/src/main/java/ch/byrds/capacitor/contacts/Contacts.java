@@ -35,8 +35,6 @@ class ContactsPermission {
 
 @CapacitorPlugin(
     name = "Contacts",
-    //requestCodes is labeled as legacy in bridge
-    requestCodes = Contacts.REQUEST_CODE,
     permissions = { @Permission(strings = { Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS }, alias = "contacts") }
 )
 public class Contacts extends Plugin {
