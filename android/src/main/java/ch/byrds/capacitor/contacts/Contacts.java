@@ -29,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 class ContactsPermission {
+
     public static int DENIED = 2;
     public static int AUTHORIZED = 3;
 }
@@ -54,6 +55,9 @@ public class Contacts extends Plugin {
     private static final String PHONE_LABEL = "label";
     private static final String PHONE_NUMBER = "number";
     private static final String DISPLAY_NAME = "displayName";
+    private static final String GIVEN_NAME = "givenName";
+    private static final String MIDDLE_NAME = "middleName";
+    private static final String FAMILY_NAME = "familyName";
     private static final String PHOTO_THUMBNAIL = "photoThumbnail";
     private static final String ORGANIZATION_NAME = "organizationName";
     private static final String ORGANIZATION_ROLE = "organizationRole";
@@ -73,7 +77,7 @@ public class Contacts extends Plugin {
     @PluginMethod
     public void hasPermission(PluginCall call) {
         JSObject result = new JSObject();
-        if(hasRequiredPermissions()){
+        if (hasRequiredPermissions()) {
             result.put("status", ContactsPermission.AUTHORIZED);
         } else {
             result.put("status", ContactsPermission.DENIED);
@@ -109,6 +113,9 @@ public class Contacts extends Plugin {
             ContactsContract.Contacts._ID,
             ContactsContract.Data.CONTACT_ID,
             ContactsContract.Contacts.DISPLAY_NAME,
+            ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME,
+            ContactsContract.CommonDataKinds.StructuredName.MIDDLE_NAME,
+            ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME,
             ContactsContract.Contacts.Photo.PHOTO,
             ContactsContract.CommonDataKinds.Contactables.DATA,
             ContactsContract.CommonDataKinds.Contactables.TYPE,
@@ -140,8 +147,17 @@ public class Contacts extends Plugin {
 
                     jsContact.put(CONTACT_ID, contactId);
                     String displayName = contactsCursor.getString(contactsCursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-
                     jsContact.put(DISPLAY_NAME, displayName);
+
+                    String givenName = contactsCursor.getString(contactsCursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME));
+                    jsContact.put(GIVEN_NAME, givenName);
+
+                    String middleName = contactsCursor.getString(contactsCursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.MIDDLE_NAME));
+                    jsContact.put(MIDDLE_NAME, middleName);
+
+                    String familyName = contactsCursor.getString(contactsCursor.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME));
+                    jsContact.put(FAMILY_NAME, familyName);
+
                     JSArray jsPhoneNumbers = new JSArray();
                     jsContact.put(PHONE_NUMBERS, jsPhoneNumbers);
                     JSArray jsEmailAddresses = new JSArray();

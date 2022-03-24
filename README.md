@@ -305,6 +305,9 @@ saveContact(contact: NewContact) => any
 | ---------------------- | ------------------- |
 | **`contactId`**        | <code>string</code> |
 | **`displayName`**      | <code>string</code> |
+| **`givenName`**        | <code>string</code> |
+| **`middleName`**       | <code>string</code> |
+| **`familyName`**       | <code>string</code> |
 | **`phoneNumbers`**     | <code>{}</code>     |
 | **`emails`**           | <code>{}</code>     |
 | **`photoThumbnail`**   | <code>string</code> |

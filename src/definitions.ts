@@ -28,7 +28,6 @@ export enum PermissionGrantStatus {
 
   /** The application is authorized to access contact data. */
   AUTHORIZED = 3,
-
 }
 
 export interface GrantStatus {
@@ -79,6 +78,9 @@ export enum ContactType {
 export interface Contact {
   contactId: string;
   displayName?: string;
+  givenName?: string;
+  middleName?: string;
+  familyName?: string;
   phoneNumbers: PhoneNumber[];
   emails: EmailAddress[];
   photoThumbnail?: string;

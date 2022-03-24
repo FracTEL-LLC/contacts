@@ -77,7 +77,7 @@ public class ContactsPlugin: CAPPlugin {
                                 "state": address.value.state as String,
                                 "postalCode": address.value.postalCode as String,
                                 "appleLabel": labelToAppend,
-                                "postalString": addressFormatter.string(from:address.value)
+                                "postalString": addressFormatter.string(from: address.value)
                             ])
                         }
                         for email in contact.emailAddresses {
@@ -86,13 +86,16 @@ public class ContactsPlugin: CAPPlugin {
                             let labelToAppend = CNLabeledValue<NSString>.localizedString(forLabel: label)
                             emails.append([
                                 "label": labelToAppend,
-                                "address": emailToAppend,
+                                "address": emailToAppend
                             ])
                         }
 
                         var contactResult: PluginCallResultData = [
                             "contactId": contact.identifier,
                             "displayName": "\(contact.givenName) \(contact.familyName)",
+                            "givenName": contact.givenName,
+                            "middleName": contact.middleName,
+                            "familyName": contact.familyName,
                             "phoneNumbers": phoneNumbers,
                             "emails": emails,
                             "addresses": postalAddresses
