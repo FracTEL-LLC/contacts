@@ -18,8 +18,8 @@ public class ContactsPlugin: CAPPlugin {
     override public func load() {
         // You must set the time zone from your default time zone to UTC +0,
         // which is what birthdays in Contacts are set to.
-        birthdayFormatter.timeZone = TimeZone(identifier: "UTC")
-        birthdayFormatter.dateFormat = "YYYY-MM-dd"
+        //birthdayFormatter.timeZone = TimeZone(identifier: "UTC")
+        //birthdayFormatter.dateFormat = "YYYY-MM-dd"
     }
 
     @objc func getPermissions(_ call: CAPPluginCall) {
@@ -52,12 +52,12 @@ public class ContactsPlugin: CAPPlugin {
             if granted {
                 do {
                     let contacts = try Contacts.getContactFromCNContact()
-                    let addressFormatter = CNPostalAddressFormatter()
+                    //let addressFormatter = CNPostalAddressFormatter()
 
                     for contact in contacts {
                         var phoneNumbers: [PluginCallResultData] = []
-                        var emails: [PluginCallResultData] = []
-                        var postalAddresses: [PluginCallResultData] = []
+                        //var emails: [PluginCallResultData] = []
+                        //var postalAddresses: [PluginCallResultData] = []
                         for number in contact.phoneNumbers {
                             let numberToAppend = number.value.stringValue
                             let label = number.label ?? ""
@@ -68,27 +68,27 @@ public class ContactsPlugin: CAPPlugin {
                             ])
                             print(phoneNumbers)
                         }
-                        for address in contact.postalAddresses {
-                            let label = address.label ?? ""
-                            let labelToAppend = CNLabeledValue<NSString>.localizedString(forLabel: label)
-                            postalAddresses.append([
-                                "street": address.value.street as String,
-                                "city": address.value.city as String,
-                                "state": address.value.state as String,
-                                "postalCode": address.value.postalCode as String,
-                                "appleLabel": labelToAppend,
-                                "postalString": addressFormatter.string(from: address.value)
-                            ])
-                        }
-                        for email in contact.emailAddresses {
-                            let emailToAppend = email.value as String
-                            let label = email.label ?? ""
-                            let labelToAppend = CNLabeledValue<NSString>.localizedString(forLabel: label)
-                            emails.append([
-                                "label": labelToAppend,
-                                "address": emailToAppend
-                            ])
-                        }
+                        // for address in contact.postalAddresses {
+                        //     let label = address.label ?? ""
+                        //     let labelToAppend = CNLabeledValue<NSString>.localizedString(forLabel: label)
+                        //     postalAddresses.append([
+                        //         "street": address.value.street as String,
+                        //         "city": address.value.city as String,
+                        //         "state": address.value.state as String,
+                        //         "postalCode": address.value.postalCode as String,
+                        //         "appleLabel": labelToAppend,
+                        //         "postalString": addressFormatter.string(from: address.value)
+                        //     ])
+                        // }
+                        // for email in contact.emailAddresses {
+                        //     let emailToAppend = email.value as String
+                        //     let label = email.label ?? ""
+                        //     let labelToAppend = CNLabeledValue<NSString>.localizedString(forLabel: label)
+                        //     emails.append([
+                        //         "label": labelToAppend,
+                        //         "address": emailToAppend
+                        //     ])
+                        // }
 
                         var contactResult: PluginCallResultData = [
                             "contactId": contact.identifier,
@@ -97,18 +97,21 @@ public class ContactsPlugin: CAPPlugin {
                             "middleName": contact.middleName,
                             "familyName": contact.familyName,
                             "phoneNumbers": phoneNumbers,
-                            "emails": emails,
-                            "addresses": postalAddresses
+                            "sortField": contact.familyName,
+                            // "addresses": postalAddresses
                         ]
-                        if let photoThumbnail = contact.thumbnailImageData {
-                            contactResult["photoThumbnail"] = "data:image/png;base64,\(photoThumbnail.base64EncodedString())"
-                            if let birthday = contact.birthday?.date {
-                                contactResult["birthday"] = self.birthdayFormatter.string(from: birthday)
+                        // if let photoThumbnail = contact.thumbnailImageData {
+                        //     contactResult["photoThumbnail"] = "data:image/png;base64,\(photoThumbnail.base64EncodedString())"
+                        //     if let birthday = contact.birthday?.date {
+                        //         contactResult["birthday"] = self.birthdayFormatter.string(from: birthday)
+                        //     }
+                        // }
+                        if contact.familyName.isEmpty {
+                                contactResult["sortField"] = contact.givenName
                             }
-                            if !contact.organizationName.isEmpty {
-                                contactResult["organizationName"] = contact.organizationName
-                                contactResult["organizationRole"] = contact.jobTitle
-                            }
+                        if !contact.organizationName.isEmpty {
+                            contactResult["displayName"] = contact.organizationName
+                            contactResult["sortField"] = contact.organizationName
                         }
                         contactsArray.append(contactResult)
                     }
