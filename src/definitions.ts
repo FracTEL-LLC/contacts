@@ -87,6 +87,7 @@ export interface Contact {
   organizationName?: string;
   organizationRole?: string;
   birthday?: string;
+  sortField?: string;
 }
 
 /**
