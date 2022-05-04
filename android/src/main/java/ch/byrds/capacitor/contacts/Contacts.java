@@ -65,6 +65,7 @@ public class Contacts extends Plugin {
 
     @PluginMethod
     public void getPermissions(PluginCall call) {
+      
         if (!hasRequiredPermissions()) {
             requestPermissions(call);
         } else {
