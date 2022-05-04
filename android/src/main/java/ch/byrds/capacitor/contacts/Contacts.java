@@ -61,6 +61,7 @@ public class Contacts extends Plugin {
     private static final String ORGANIZATION_ROLE = "organizationRole";
     private static final String BIRTHDAY = "birthday";
     private static final String SORT_FIELD = "sortField";
+    private boolean orgSort = false;
 
     @PluginMethod
     public void getPermissions(PluginCall call) {
@@ -166,6 +167,9 @@ public class Contacts extends Plugin {
 
                     if (familyName == null) {
                         jsContact.put(SORT_FIELD, givenName);
+                        if (givenName == null) {
+                            this.orgSort = true;
+                        }
                     }
 
                     JSArray jsPhoneNumbers = new JSArray();
@@ -229,7 +233,10 @@ public class Contacts extends Plugin {
                         // organization
                         case Organization.CONTENT_ITEM_TYPE:
                             jsContact.put(ORGANIZATION_NAME, data);
-                            jsContact.put(SORT_FIELD, data);
+                            if (this.orgSort = true) {
+                                jsContact.put(SORT_FIELD, data);
+                            }
+
                             String organizationRole = contactsCursor
                                     .getString(contactsCursor.getColumnIndex(Organization.TITLE));
                             if (organizationRole != null) {

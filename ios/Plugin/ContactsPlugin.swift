@@ -98,6 +98,7 @@ public class ContactsPlugin: CAPPlugin {
                             "familyName": contact.familyName,
                             "phoneNumbers": phoneNumbers,
                             "sortField": contact.familyName,
+                            "organizationName": contact.organizationName,
                             // "addresses": postalAddresses
                         ]
                         // if let photoThumbnail = contact.thumbnailImageData {
@@ -110,8 +111,11 @@ public class ContactsPlugin: CAPPlugin {
                                 contactResult["sortField"] = contact.givenName
                             }
                         if !contact.organizationName.isEmpty {
-                            contactResult["displayName"] = contact.organizationName
-                            contactResult["sortField"] = contact.organizationName
+                            
+                            if contact.familyName.isEmpty && contact.givenName.isEmpty {
+                                contactResult["displayName"] = contact.organizationName
+                                contactResult["sortField"] = contact.organizationName
+                            }
                         }
                         contactsArray.append(contactResult)
                     }
