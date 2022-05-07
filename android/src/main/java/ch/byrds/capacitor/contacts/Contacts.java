@@ -15,6 +15,7 @@ import android.util.Base64;
 import android.util.Log;
 import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
+import com.getcapacitor.PermissionState;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
@@ -65,20 +66,21 @@ public class Contacts extends Plugin {
 
     @PluginMethod
     public void getPermissions(PluginCall call) {
-      
-        if (!hasRequiredPermissions()) {
-            requestPermissions(call);
+        if (getPermissionState("contacts") != PermissionState.GRANTED) {
+          JSObject result = new JSObject();
+          result.put("granted", false);
+          call.resolve(result);
         } else {
-            JSObject result = new JSObject();
-            result.put("granted", true);
-            call.resolve(result);
+          JSObject result = new JSObject();
+          result.put("granted", true);
+          call.resolve(result);
         }
     }
 
     @PluginMethod
     public void hasPermission(PluginCall call) {
         JSObject result = new JSObject();
-        if (hasRequiredPermissions()) {
+        if (getPermissionState("contacts") == PermissionState.GRANTED) {
             result.put("status", ContactsPermission.AUTHORIZED);
         } else {
             result.put("status", ContactsPermission.DENIED);
@@ -86,21 +88,6 @@ public class Contacts extends Plugin {
         call.resolve(result);
     }
 
-    @Override
-    protected void handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.handleRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        PluginCall savedCall = getSavedCall();
-        JSObject result = new JSObject();
-
-        if (!hasRequiredPermissions()) {
-            result.put("granted", false);
-            savedCall.resolve(result);
-        } else {
-            result.put("granted", true);
-            savedCall.resolve(result);
-        }
-    }
 
     @PluginMethod
     public void getContacts(PluginCall call) {
