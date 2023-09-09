@@ -39,7 +39,7 @@ class ContactsPermission {
 }
 
 @CapacitorPlugin(name = "Contacts", permissions = { @Permission(strings = { Manifest.permission.READ_CONTACTS,
-  Manifest.permission.WRITE_CONTACTS }, alias = "contacts") })
+  Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_PHONE_NUMBERS }, alias = "contacts") })
 public class Contacts extends Plugin {
 
   public static final String LOG_TAG = "Contacts";
